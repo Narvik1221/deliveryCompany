@@ -7,6 +7,7 @@
 }
 :root {
   --black: rgb(21, 21, 21);
+  --ye: #feee03;
 }
 
 body {
@@ -106,6 +107,7 @@ html,
 .top__order {
 }
 .title {
+  min-height: 72px;
   font-size: 30px;
   color: var(--black);
   font-weight: 500;
@@ -113,12 +115,13 @@ html,
 }
 
 input {
+  min-width: 120px;
   font-size: 20px;
   padding: 6px;
   width: 100%;
   border-radius: 5px;
   border: 1px solid var(--black);
-  height: 56px;
+  height: 50px;
 }
 .top__order-wrapper {
   display: flex;
@@ -126,15 +129,41 @@ input {
   gap: 10px;
 }
 .search {
+  max-width: 50px;
+  transition: 0.25s all ease;
   padding: 6px;
   border-radius: 5px;
-  height: 56px;
-  width: 56px;
+  height: 50px;
+  min-width: 50px;
   background-color: #22502b;
-  border: 1px solid var(--black);
+  border: 1px solid #22502b;
 }
-.search:hover {
+.my-btn {
+  transition: 0.25s all ease;
+  font-size: 20px;
+  color: white;
+  background-color: #22502b;
+  border: 1px solid #22502b;
+  padding: 6px;
+  border-radius: 5px;
+  height: 50px;
+  max-width: 140px;
+  width: 100%;
+}
+.input-number{
+  width: 100%;
+  max-width: 240px;
+}
+.input-calc{
+  width: 100%;
+  max-width:300px;
+}
+.search:hover,
+.my-btn:hover {
   background-color: #246430;
+}
+.top{
+  height: calc(100vh - 132px);
 }
 .top__calc {
 }
@@ -156,4 +185,58 @@ input {
 }
 .btn-success {
   margin-top: 20px !important;
+}
+
+select {  height: 50px;
+  appearance: none;
+  outline: 10px red;
+  border: 0;
+  box-shadow: none;
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: #fff;
+  background-image: none;
+  cursor: pointer;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.select {
+  height: 50px;
+  border: 1px solid var(--black);
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: -3px;
+  right: 0;
+  padding: 1em;
+  background-color: #22502b;
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+
+.select:hover::after {
+  background-color: #246430;
+  color: var(--ye);
+}
+.calc-wrapper{
+  gap: 20px;
+  flex-direction: column;
+  align-items:baseline;
+}
+
+.comment{
+  font-size: 18px;
+  color: var(--black);
 }
