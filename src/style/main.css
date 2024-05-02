@@ -9,7 +9,7 @@
   --black: rgb(21, 21, 21);
   --ye: #feee03;
   --green: #275e31;
-  --gray: #5e5e5e
+  --gray: #5e5e5e;
 }
 
 body {
@@ -128,7 +128,7 @@ html,
 
 .top-sky {
   width: 100vw;
-  height: 500px;
+  height: 418px;
   top: 0;
   background-size: cover;
   background-position: center;
@@ -139,7 +139,7 @@ html,
 }
 .bottom-sky {
   width: 100vw;
-  height: 418px;
+  height: 400px;
   bottom: -80px;
   background-size: cover;
   background-position: center;
@@ -206,6 +206,8 @@ input {
   border-radius: 20px;
   background-color: white;
   padding: 20px;
+  width: 100%;
+  max-width: 450px;
 }
 .search {
   max-width: 50px;
@@ -216,6 +218,9 @@ input {
   min-width: 50px;
   background-color: var(--green);
   border: 1px solid var(--green);
+}
+.calc-inner{
+  height: 430px;
 }
 .my-btn {
   justify-content: center;
@@ -233,14 +238,19 @@ input {
   max-width: fit-content;
   width: 100%;
 }
-.my-btn > img{
+.count-btn {
+  margin-top: auto;
+  width: 122px;
+  max-width: 122px;
+  min-width: 122px;
+}
+.my-btn > img {
   width: 26px;
 }
 .input-number {
   font-size: 18px;
   background-color: rgb(211, 224, 205);
   width: 100%;
-
 }
 .input-calc {
   font-size: 18px;
@@ -284,6 +294,8 @@ input {
 }
 .auth-btn {
   align-self: center;
+  max-width: 148px;
+    width: 148px;
 }
 .auth-message a {
   font-weight: 500;
@@ -330,7 +342,7 @@ select::-ms-expand {
   border-radius: 0.25em;
   overflow: hidden;
 }
-.select::before{
+.select::before {
   pointer-events: none;
   transform: rotate(-90deg);
   width: 32px;
@@ -338,7 +350,7 @@ select::-ms-expand {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('../images/arrow.svg');
+  background-image: url("../images/arrow.svg");
   content: "";
   position: absolute;
   top: 8px;
@@ -360,7 +372,7 @@ select::-ms-expand {
   background-color: #266b32;
 }
 .select:hover::before {
-  background-image: url('../images/arrow-active.svg');
+  background-image: url("../images/arrow-active.svg");
 }
 .calc-wrapper {
   gap: 20px;
@@ -544,6 +556,11 @@ select::-ms-expand {
   flex-direction: column;
   gap: 20px;
 }
+.map {
+  display: none;
+  width: 600px;
+  height: 600px;
+}
 .login-inner {
   margin-top: 100px;
   width: 100vw;
@@ -574,7 +591,6 @@ select::-ms-expand {
   display: flex;
   gap: 20px;
 }
-
 
 .header__btn {
   scale: 1.2;
@@ -658,18 +674,16 @@ select::-ms-expand {
   flex-direction: column;
 }
 
-
-.cabinet__inner{
-  padding: 50px 0;
+.cabinet__inner {
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 114px);
-
 }
-.cabinet__bottom{
+.cabinet__bottom {
   display: flex;
   align-items: center;
-  gap: 40px ;
+  gap: 40px;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-top: auto;
@@ -742,10 +756,6 @@ th {
   margin-bottom: 40px;
   overflow: hidden;
 }
-
-
-
-
 
 @media (min-width: 768px) and (max-width: 960px) {
   .m768-960 {

@@ -30,8 +30,8 @@ export const Card = () => {
           src="https://yandex.ru/map-widget/v1/?ll=127.533010%2C50.306389&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgoyNDc0MDk0NDE4EnLQoNC-0YHRgdC40Y8sINCQ0LzRg9GA0YHQutCw0Y8g0L7QsdC70LDRgdGC0YwsINCR0LvQsNCz0L7QstC10YnQtdC90YHQuiwg0J3QvtCy0L7RgtGA0L7QuNGG0LrQvtC1INGI0L7RgdGB0LUsIDIz0JEiCg3fEP9CFX05SUI%2C&z=19&scroll=false"
           width="100%"
           height="800"
-          frameborder="1"
-          allowfullscreen="true"
+          frameBorder={1}
+          allowFullScreen={true}
           style={{ position: "relative" }}
         ></iframe>
       </div>

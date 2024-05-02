@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import logo from "../images/logo.jpeg";
-import { MAIN_ROUTE, AUTH_ROUTE } from "../utils/consts";
+import { MAIN_ROUTE, AUTH_ROUTE, CABINET_ROUTE, ADMIN_ROUTE } from "../utils/consts";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
@@ -10,7 +10,7 @@ export const Header = observer(() => {
   const btn = useRef();
   const location = useLocation();
   const [wrp, setWrp] = useState(false);
-
+  const [path,setPath]= useState(AUTH_ROUTE);
   const click = (e) => {
     setWrp(!wrp);
   };
@@ -18,6 +18,28 @@ export const Header = observer(() => {
     if (document.body.clientWidth > 748) setWrp(false);
   };
   useEffect(() => {
+    console.log(user.isAuth)
+      if(user.isAuth){
+    
+        let myUser=localStorage.getItem("user")
+        if(!!myUser){
+          myUser=JSON.parse(myUser)
+          if(myUser.token.role=="ADMIN"){
+            setPath(ADMIN_ROUTE)
+          }
+          else{
+            setPath(CABINET_ROUTE)
+          }
+        
+        }
+
+      }
+        else{
+          setPath(AUTH_ROUTE)
+        }
+  }, [user.isAuth]);
+  useEffect(() => {
+
     window.addEventListener("resize", handleResize, true);
     return () => {
       window.removeEventListener("resize", handleResize, true);
@@ -63,7 +85,7 @@ export const Header = observer(() => {
               )}
 
               <li className="wrp__navbar-item">
-                <Link to={AUTH_ROUTE} className="header__link">
+                <Link  to={path} className="header__link">
                   Личный кабинет
                 </Link>
               </li>
@@ -103,7 +125,7 @@ export const Header = observer(() => {
               )}
             </div>
 
-            <Link to={AUTH_ROUTE} className="my-btn login-btn header-big">
+            <Link to={path} className="my-btn login-btn header-big">
               <div className="header__person-text">Личный кабинет</div>
               <div className="header__person--logo"></div>
             </Link>

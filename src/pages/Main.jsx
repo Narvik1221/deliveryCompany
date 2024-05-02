@@ -6,11 +6,104 @@ import "swiper/css";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
 import avatar from "../images/avatar.svg";
+import Loader from "../components/Loader/Loader";
+import { getCities } from "../http/orderAPI";
+import { size } from "@cloudinary/url-gen/qualifiers/textFit";
 export const Main = observer(() => {
   const options = [];
   const [countFeedback, setCountFeedback] = useState(
     document.body.clientWidth / 440
   );
+  const [myMap, setMyMap] = useState({});
+  const [cities, setCities] = useState([]);
+  const [distance, setDistance] = useState("");
+  const [calc,setCalc]= useState(null);
+  const [load,setLoad]=useState(false)
+  const [price, setPrice] = useState("674");
+  const [myForm, setMyForm] = useState({
+    city1: "",
+    city2: "",
+    weight: "",
+    size: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setMyForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  useEffect(() => {
+    console.log(myForm.city1);
+  }, [myForm.city1]);
+  useEffect(() => {
+    getCities().then((data) => setCities(data));
+    window.ymaps.ready(() => {
+      setMyMap(
+        new window.ymaps.Map(
+          "map",
+          {
+            center: [55.751574, 37.573856],
+            zoom: 9,
+          },
+          {
+            searchControlProvider: "yandex#search",
+          }
+        )
+      );
+    });
+  }, []);
+  const getDistance = (city1, city2) => {
+    const multiRoute = new window.ymaps.multiRouter.MultiRoute(
+      {
+        // Описание опорных точек мультимаршрута.
+        referencePoints: [city1, city2],
+        // Параметры маршрутизации.
+        params: {
+          // Ограничение на максимальное количество маршрутов, возвращаемое маршрутизатором.
+          results: 1,
+        },
+      },
+      {
+        // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+        boundsAutoApply: true,
+      }
+    );
+    console.log(myMap);
+    myMap.geoObjects.add(multiRoute);
+    console.log(multiRoute);
+    multiRoute.model.events.add("requestsuccess", function (event) {
+      let d = multiRoute.getRoutes().get(0).properties.get("distance").text;
+      console.log(d);
+      setDistance(d);
+      setCalc(!calc)
+      multiRoute.destroy();
+    });
+  };
+
+  const calculateOrder = () => {
+    if (myForm.city1.length > 0 && myForm.city2.length > 0) {
+      setLoad(true)
+      window.ymaps.ready(() => getDistance(myForm.city1, myForm.city2));
+    }
+  };
+
+  useEffect(() => {
+    if (calc!==null) {
+      let tmp = distance.substring(0, distance.length - 2).replace(/\s/g, "");
+      let d
+      if (tmp == '0') {
+        d = (((100 * 25 * myForm.weight) / 10) * myForm.size) / 10;
+      } else {
+        d = (((+tmp * 25 * myForm.weight) / 10) * myForm.size) / 10;
+      }
+
+      console.log(d);
+      setLoad(false)
+      setPrice(d);
+    }
+  }, [calc]);
   useEffect(() => {
     window.addEventListener("resize", handleResize, true);
     return () => {
@@ -25,6 +118,7 @@ export const Main = observer(() => {
     <>
       <main className="main">
         <section className="top">
+          <div id="map" className="map"></div>
           <div className="top-sky"></div>
           <div className="bottom-sky"></div>
           <div className="container">
@@ -32,47 +126,73 @@ export const Main = observer(() => {
               <div className="top__calc">
                 <h3 className="title">РАСЧИТАТЬ СТОИМОСТЬ ЗАКАЗА</h3>
                 <div className="top__order-wrapper calc-wrapper">
-                  <div className="top__order-inner">
-                    <div class="select">
-                      <select>
-                        <option value="DEFAULT" disabled selected hidden>
+                  <div className="top__order-inner calc-inner">
+                    <div className="select">
+                      <select
+                        value={myForm.city1}
+                        name="city1"
+                        onChange={(e) => handleChange(e)}
+                        defaultValue={"DEFAULT"}
+                      >
+                        <option value="DEFAULT" hidden>
                           Откуда
                         </option>
-                        <option value="2">Благовещенск</option>
-                        <option value="3">Белогорск</option>
-                        <option value="4">Свободный</option>
-                        <option value="3">Завитинск</option>
-                        <option value="5">Благовещенск</option>
-                        <option value="6">Улан-Удэ</option>
+                        {cities &&
+                          cities.map((i, index) => {
+                            {
+                              return (
+                                <option value={i.name} key={index}>
+                                  {i.name}
+                                </option>
+                              );
+                            }
+                          })}
                       </select>
                     </div>
-                    <div class="select">
-                      <select>
-                        <option value="DEFAULT" disabled selected hidden>
+                    <div className="select">
+                      <select
+                        value={myForm.city2}
+                        name="city2"
+                        onChange={(e) => handleChange(e)}
+                        defaultValue={"DEFAULT"}
+                      >
+                        <option value="DEFAULT" hidden>
                           Куда
                         </option>
-                        <option value="2">Благовещенск</option>
-                        <option value="3">Белогорск</option>
-                        <option value="4">Свободный</option>
-                        <option value="3">Завитинск</option>
-                        <option value="5">Благовещенск</option>
-                        <option value="6">Улан-Удэ</option>
+                        {cities &&
+                          cities.map((i, index) => {
+                            {
+                              return (
+                                <option value={i.name} key={index}>
+                                  {i.name}
+                                </option>
+                              );
+                            }
+                          })}
                       </select>
                     </div>
                     <input
+                      value={myForm.weight}
+                      name="weight"
+                      onChange={(e) => handleChange(e)}
                       className="input-calc"
                       placeholder="Вес груза (кг)"
                       type="text"
                     />
                     <input
+                      value={myForm.size}
+                      name="size"
+                      onChange={(e) => handleChange(e)}
                       className="input-calc"
                       placeholder="Длина груза (м)"
                       type="text"
                     />
                     <div className="comment">
-                      от 674 ₽, скорейшее прибытие — через 4 дня
+                      от {price} ₽, скорейшее прибытие — через 4 дня
                     </div>
-                    <button className="my-btn">Расчитать</button>
+                    <button onClick={() => calculateOrder()} className="my-btn count-btn">
+                    {load?<Loader></Loader>:"Расчитать"}  
+                    </button>
                   </div>
                 </div>
               </div>

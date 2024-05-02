@@ -5,7 +5,14 @@ import Auth from "./pages/Auth";
 import Cabinet from "./pages/Cabinet";
 import Admin from "./pages/Admin";
 export const authRoutes = [
-
+    {
+        path: CABINET_ROUTE,
+        Component: Cabinet
+    },
+    {
+        path: ADMIN_ROUTE,
+        Component: Admin
+    },
 ]
 
 export const publicRoutes = [
@@ -21,13 +28,6 @@ export const publicRoutes = [
         path: LOGIN_ROUTE,
         Component: Auth
     },
-    {
-        path: CABINET_ROUTE,
-        Component: Cabinet
-    },
-    {
-        path: ADMIN_ROUTE,
-        Component: Admin
-    },
+
 
 ]
