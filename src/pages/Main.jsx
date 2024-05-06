@@ -93,8 +93,8 @@ export const Main = observer(() => {
                         placeholder="Введите номер"
                         type="text"
                       />
-                      <button className="search">
-                        <img src={search} alt="" />
+                      <button className="search search-btn">
+                        <div className="search-img"></div>
                       </button>
                     </div>
                     <div className="comment">

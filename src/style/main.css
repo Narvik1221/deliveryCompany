@@ -259,9 +259,7 @@ input {
 }
 .count-btn {
   margin-top: auto;
-  width: 122px;
-  max-width: 122px;
-  min-width: 122px;
+  min-width: 140px;
 }
 .my-btn > img {
   width: 26px;
@@ -281,6 +279,30 @@ input {
   font-size: 18px;
   max-width: 500px;
   background-color: rgb(211, 224, 205);
+}
+.search-img {
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("../images/s-ye.svg");
+}
+.search-img {
+  width: 38px;
+  height: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("../images/s-ye.svg");
+}
+.search-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.search-btn:hover > * {
+  background-image: url("../images/s-w.svg");
 }
 .search:hover,
 .my-btn:hover {
@@ -369,7 +391,8 @@ select::-ms-expand {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("../images/arrow.svg");
+  background-image: url("../images/arrow-active.svg");
+
   content: "";
   position: absolute;
   top: 8px;
@@ -391,7 +414,7 @@ select::-ms-expand {
   background-color: #266b32;
 }
 .select:hover::before {
-  background-image: url("../images/arrow-active.svg");
+  background-image: url("../images/arrow.svg");
 }
 .calc-wrapper {
   gap: 20px;
@@ -585,18 +608,18 @@ select::-ms-expand {
 .s3.active {
   color: var(--ye);
 }
-.modal-card{
+.modal-card {
   margin-left: 10px;
 }
 
-.dotes{
+.dotes {
   display: -webkit-box;
--webkit-line-clamp: 3;
--webkit-box-orient: vertical;
-overflow: hidden;
-text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.modal-text{
+.modal-text {
   max-height: 100%;
   overflow-y: auto;
 }
@@ -617,10 +640,10 @@ text-overflow: ellipsis;
 }
 .feedback__card-star {
 }
-.small-stars > *{
+.small-stars > * {
   font-size: 14px !important;
 }
-.small-stars{
+.small-stars {
   width: 120px;
 }
 .feedback__card-more {
@@ -631,7 +654,7 @@ text-overflow: ellipsis;
   font-size: 17px;
   color: var(--black);
 }
-.feedback__card-more:hover{
+.feedback__card-more:hover {
   font-weight: 600;
 }
 .feedback__card-stars {
@@ -1038,7 +1061,7 @@ th {
   border: 1px solid rgb(205, 205, 205);
 }
 .table-wrap.admin {
-  background-color:rgb(237, 237, 237);
+  background-color: rgb(237, 237, 237);
   height: calc(100vh - 370px);
 }
 .table-container {

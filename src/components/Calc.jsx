@@ -170,9 +170,9 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
       }
       let d;
       if (tmp == "0") {
-        d = 500 + (((200 * 25 * myForm.weight) / 10) * myForm.size) / 10;
+        d = 500 + (((200 * 15 * myForm.weight) / 15) * myForm.size) / 15;
       } else {
-        d = 500 + (((+tmp * 25 * myForm.weight) / 10) * myForm.size) / 10;
+        d = 500 + (((+tmp * 15 * myForm.weight) / 15) * myForm.size) / 15;
       }
 
       console.log(d);
