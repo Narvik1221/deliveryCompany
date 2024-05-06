@@ -280,7 +280,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
         </div>
         <div className="calc-inner__bottom">
           <button type="submit" className="my-btn count-btn">
-            {load ? <Loader></Loader> : "Расчитать"}
+            {load ? <Loader></Loader> : "Рассчитать"}
           </button>
           {isModal
             ? calc !== null && (
