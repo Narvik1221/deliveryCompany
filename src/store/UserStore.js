@@ -6,6 +6,7 @@ export default class UserStore {
     this._role = false;
     this._userId = false;
     this._name = false;
+    this._user = false;
     this._surname = false;
     this._path = false;
     this._path =false;

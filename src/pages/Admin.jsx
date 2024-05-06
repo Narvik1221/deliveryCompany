@@ -18,8 +18,14 @@ export const Cabinet = observer(() => {
   const optionsSelect = ["Создан", "Принят", "В пути", "Доставлен"];
   const history = useNavigate();
   useEffect(() => {
-    console.log(orders);
-  }, [orders]);
+    if (user.isAuth) {
+      let myUser = localStorage.getItem("user");
+      if (!!myUser) myUser = JSON.parse(myUser);
+      if (myUser.token.name != "ADMIN") {
+        history(MAIN_ROUTE);
+      }
+    }
+  }, [user.isAuth]);
   useEffect(() => {
     getAllOrders().then((data) => {
       setOrders(data);
@@ -97,6 +103,7 @@ export const Cabinet = observer(() => {
                           <th>№</th>
                           <th>Id</th>
                           <th>Код заказа</th>
+                          <th>Email</th>
                           <th>Масса (кг)</th>
                           <th>Объем (м&#178;)</th>
                           <th>Стоимость ₽</th>
@@ -115,6 +122,7 @@ export const Cabinet = observer(() => {
                             <td>{index + 1}</td>
                             <td>{i.userId}</td>
                             <td>{i.code}</td>
+                            <td>{i.email}</td>
                             <td>{i.weight}</td>
                             <td>{i.size}</td>
                             <td>{i.price}</td>

@@ -189,6 +189,7 @@ export const Cabinet = observer(() => {
                         <tr>
                           <th>№</th>
                           <th>Код заказа</th>
+                          <th>Email</th>
                           <th>Масса (кг)</th>
                           <th>Объем (м&#179;)</th>
                           <th>Стоимость ₽</th>
@@ -205,6 +206,7 @@ export const Cabinet = observer(() => {
                             <tr key={index}>
                               <td>{index + 1}</td>
                               <td>{i.code}</td>
+                              <td>{i.email}</td>
                               <td>{i.weight}</td>
                               <td>{i.size}</td>
                               <td>{i.price}</td>

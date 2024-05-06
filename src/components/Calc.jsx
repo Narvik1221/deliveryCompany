@@ -64,6 +64,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
       price: price,
       date1: data1,
       date2: data2,
+      email:myUser.token.email
     }).then((data) => {
       setOrders((current) => [...current, data]);
       setPopupAdmin(false);
