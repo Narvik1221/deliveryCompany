@@ -20,9 +20,12 @@ export const Cabinet = observer(() => {
   useEffect(() => {
     if (user.isAuth) {
       let myUser = localStorage.getItem("user");
-      if (!!myUser) myUser = JSON.parse(myUser);
-      if (myUser.token.name != "ADMIN") {
-        history(MAIN_ROUTE);
+      if (!!myUser) {
+        myUser = JSON.parse(myUser);
+        console.log(myUser)
+        if (myUser.token.email != "ADMIN") {
+          history(MAIN_ROUTE);
+        }
       }
     }
   }, [user.isAuth]);
