@@ -2,18 +2,38 @@ import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import logout from "../images/logout.svg";
 import Table from "react-bootstrap/Table";
-import {  useNavigate } from "react-router-dom";import { Context } from "../index";
+import Calc from "../components/Calc";
+import { useNavigate, NavLink } from "react-router-dom";
+import { Context } from "../index";
 import { MAIN_ROUTE } from "../utils/consts";
+import { PopupAdmin } from "../components/PopupAdmin";
+import { getOrders, createFeedback, changeOrder } from "../http/orderAPI";
 export const Cabinet = observer(() => {
   const { user } = useContext(Context);
-  const [orders, setOrders] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [email, setEmail] = useState(null);
+  const [popupAdmin, setPopupAdmin] = useState(false);
+  const [feed, setFeed] = useState("");
+  const [popupFeedback, setPopupFeedback] = useState(false);
+  const [allTable, setAllTable] = useState(null);
+  const [sendFeed, setSendFeed] = useState("");
+  const [sendRaiting, setSendRaiting] = useState(0);
   const history = useNavigate();
+  useEffect(() => {}, [orders]);
+  useEffect(() => {
+    setPopupAdmin(user.popupAdmin);
+    getMyOrders();
+  }, []);
+
   const setLogout = () => {
     user.setIsAuth(false);
     localStorage.removeItem("user");
     setEmail(null);
     history(MAIN_ROUTE);
+  };
+
+  const setMyOrder = (e) => {
+    setPopupAdmin(true);
   };
   useEffect(() => {
     if (user.isAuth) {
@@ -22,53 +42,202 @@ export const Cabinet = observer(() => {
       setEmail(myUser.token.email);
     }
   }, [user.isAuth]);
+
+  const handleChangeTable = (val) => {
+    setAllTable(val);
+    getMyOrders(val);
+  };
+
+  const getMyOrders = (val) => {
+    let myUser = JSON.parse(localStorage.getItem("user"));
+
+    getOrders(myUser.token.id, val).then((data) => {
+      setOrders(data);
+    });
+  };
+
+  const sendFeedback = () => {
+    let myUser = JSON.parse(localStorage.getItem("user"));
+    let data = {
+      orderId: feed.id,
+      name: sendFeed,
+      email: myUser.token.email,
+      raiting: sendRaiting,
+    };
+
+    createFeedback(data).then((data) => {
+      if (data) {
+        setPopupFeedback(false);
+        alert("Вы успешно создали отзыв!");
+        setFeed("");
+        setSendFeed("");
+        let d = {
+          id: feed.id,
+          feedback: false,
+        };
+        changeOrder(d).then((data) => {
+          getMyOrders();
+        });
+      }
+    });
+  };
+  const handleStars = (e) => {
+    for (let item of e.currentTarget.children) {
+      item.classList.remove("active");
+    }
+    e.target.classList.toggle("active");
+    setSendRaiting(e.target.name);
+  };
   return (
     <>
+      <PopupAdmin isActive={popupAdmin} setIsActive={setPopupAdmin}>
+        <Calc
+          setOrders={setOrders}
+          isModal={true}
+          setPopupAdmin={setPopupAdmin}
+        ></Calc>
+      </PopupAdmin>
+      <PopupAdmin isActive={popupFeedback} setIsActive={setPopupFeedback}>
+        <div className="top__order-inner calc-inner">
+          <div className="feedback__title subtitle">
+            Отзыв к заказу № {feed.code}
+          </div>
+          <div onClick={(e) => handleStars(e)} className="star-wrapper">
+            <a name="5" className="fas fa-star s1 "></a>
+            <a name="4" className="fas fa-star s2"></a>
+            <a name="3" className="fas fa-star s3 "></a>
+            <a name="2" className="fas fa-star s4"></a>
+            <a name="1" className="fas fa-star s5 active"></a>
+          </div>
+          <textarea
+            rows="10"
+            cols="5"
+            value={sendFeed}
+            onChange={(e) => setSendFeed(e.target.value)}
+            name="text"
+            className="textarea"
+          />
+          <div onClick={() => sendFeedback()} className="my-btn">
+            Отправить
+          </div>
+        </div>
+      </PopupAdmin>
       <main className="main">
         <section className="cabinet">
           <div className="container">
             <div className="cabinet__inner">
+              <NavLink to={MAIN_ROUTE} className="back"></NavLink>
               <div className="cabinet__top">
-                <h3 className="title">{email && "Пользователь:" + email} </h3>
-                <h3 className="subtitle"> Ваши заказы</h3>
-              </div>
-              <div className="table-container">
-                <div className="table-wrap">
-                  <Table striped bordered hover>
-                    <thead>
-                      <tr>
-                        <th>№</th>
-                        <th>Id</th>
-                        <th>Код заказа</th>
-                        <th>Масса</th>
-                        <th>Длина</th>
-                        <th>Стоимость</th>
-                        <th>Статус</th>
-                        <th>Дата создания</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {!!orders &&
-                        orders.map((i, index) => (
-                          <tr>
-                            <td>{index + 1}</td>
-                            <td>{i.id}</td>
-                            <td>{i.userId}</td>
-                            <td></td>
-                            <td></td>
-                            <td>{i.count}</td>
-                            <td>{i.price}</td>
-                            <td>{i.date}</td>
-                            <td>{i.time}</td>
-                            <td>{i.deliveryCourier ? "Да" : "Нет"}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </Table>
+                <h3 className="title">{email && "Пользователь: " + email} </h3>
+                <div className="cabinet__top-inner">
+                  <h3 className="subtitle sub-cab">
+                    {orders.length > 0
+                      ? "Ваши заказы"
+                      : "У вас пока нет заказов"}{" "}
+                  </h3>
+                  <ul className="guide__filters">
+                    <li>
+                      <label className="guide__filter">
+                        <input
+                          checked={allTable == null}
+                          value={allTable == "null"}
+                          id="table-1"
+                          name="table"
+                          onChange={() => handleChangeTable(null)}
+                          type="radio"
+                          className="guide__check table-radio"
+                        />
+                        <div className="guide__check-text">Все</div>
+                      </label>
+                    </li>
+                    <li>
+                      <label className="guide__filter">
+                        <input
+                          checked={allTable == true}
+                          value={allTable == "true"}
+                          id="table-2"
+                          name="table"
+                          onChange={() => handleChangeTable(true)}
+                          type="radio"
+                          className="guide__check table-radio"
+                        />
+                        <div className="guide__check-text">Активные</div>
+                      </label>
+                    </li>
+                    <li>
+                      <label className="guide__filter">
+                        <input
+                          checked={allTable == false}
+                          value={allTable == "false"}
+                          id="table-3"
+                          name="table"
+                          onChange={() => handleChangeTable(false)}
+                          type="radio"
+                          className="guide__check table-radio"
+                        />
+                        <div className="guide__check-text">Неактивные</div>
+                      </label>
+                    </li>
+                  </ul>
                 </div>
               </div>
+              <div className="table-container">
+                {
+                  <div className="table-wrap">
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>№</th>
+                          <th>Код заказа</th>
+                          <th>Масса (кг)</th>
+                          <th>Объем (м&#179;)</th>
+                          <th>Стоимость ₽</th>
+                          <th>Активный</th>
+                          <th>Статус</th>
+
+                          <th>Дата создания</th>
+                          <th>Дата прибытия</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orders.length > 0 &&
+                          orders.map((i, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{i.code}</td>
+                              <td>{i.weight}</td>
+                              <td>{i.size}</td>
+                              <td>{i.price}</td>
+                              <td>{i.active ? "Да" : "Нет"}</td>
+                              <td className="feed-td">
+                                {i.status}{" "}
+                                {i.status == "Доставлен" &&
+                                  i.feedback == true && (
+                                    <button
+                                      onClick={() => {
+                                        setFeed(i);
+                                        setPopupFeedback(true);
+                                      }}
+                                      className="feed-btn"
+                                    >
+                                      <div className="like"></div>
+                                    </button>
+                                  )}
+                              </td>
+                              <td>{i.date1}</td>
+                              <td>{i.date2}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                }
+              </div>
               <div className="cabinet__bottom">
-                <button className="my-btn">Создать заказ </button>
+                <button onClick={(e) => setMyOrder(e)} className="my-btn">
+                  Создать заказ
+                </button>
+
                 <button onClick={setLogout} className="my-btn">
                   Выйти <img src={logout} alt="" />
                 </button>

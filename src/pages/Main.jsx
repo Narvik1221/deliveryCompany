@@ -3,108 +3,31 @@ import { observer } from "mobx-react-lite";
 import search from "../images/search.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { PopupAdmin } from "../components/PopupAdmin";
 import Footer from "../components/Footer";
+import Calc from "../components/Calc";
 import Card from "../components/Card";
 import avatar from "../images/avatar.svg";
 import Loader from "../components/Loader/Loader";
-import { getCities } from "../http/orderAPI";
+import { getCities, getFeedbacks } from "../http/orderAPI";
 import { size } from "@cloudinary/url-gen/qualifiers/textFit";
+import { Context } from "../index";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 export const Main = observer(() => {
-  const options = [];
+  const { user } = useContext(Context);
+  const [feedbacks, setFeedbakcs] = useState([]);
+  const [currentFeedback, setCurrentFeedback] = useState(null);
+  const [popupFeedback, setPopupFeedback] = useState(false);
   const [countFeedback, setCountFeedback] = useState(
     document.body.clientWidth / 440
   );
-  const [myMap, setMyMap] = useState({});
-  const [cities, setCities] = useState([]);
-  const [distance, setDistance] = useState("");
-  const [calc,setCalc]= useState(null);
-  const [load,setLoad]=useState(false)
-  const [price, setPrice] = useState("674");
-  const [myForm, setMyForm] = useState({
-    city1: "",
-    city2: "",
-    weight: "",
-    size: "",
-  });
-  const handleChange = (e) => {
-    const { name, value } = e.target;
 
-    setMyForm((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const openFeedback = (i) => {
+    setCurrentFeedback(i);
+    setPopupFeedback(true);
   };
   useEffect(() => {
-    console.log(myForm.city1);
-  }, [myForm.city1]);
-  useEffect(() => {
-    getCities().then((data) => setCities(data));
-    window.ymaps.ready(() => {
-      setMyMap(
-        new window.ymaps.Map(
-          "map",
-          {
-            center: [55.751574, 37.573856],
-            zoom: 9,
-          },
-          {
-            searchControlProvider: "yandex#search",
-          }
-        )
-      );
-    });
-  }, []);
-  const getDistance = (city1, city2) => {
-    const multiRoute = new window.ymaps.multiRouter.MultiRoute(
-      {
-        // Описание опорных точек мультимаршрута.
-        referencePoints: [city1, city2],
-        // Параметры маршрутизации.
-        params: {
-          // Ограничение на максимальное количество маршрутов, возвращаемое маршрутизатором.
-          results: 1,
-        },
-      },
-      {
-        // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
-        boundsAutoApply: true,
-      }
-    );
-    console.log(myMap);
-    myMap.geoObjects.add(multiRoute);
-    console.log(multiRoute);
-    multiRoute.model.events.add("requestsuccess", function (event) {
-      let d = multiRoute.getRoutes().get(0).properties.get("distance").text;
-      console.log(d);
-      setDistance(d);
-      setCalc(!calc)
-      multiRoute.destroy();
-    });
-  };
-
-  const calculateOrder = () => {
-    if (myForm.city1.length > 0 && myForm.city2.length > 0) {
-      setLoad(true)
-      window.ymaps.ready(() => getDistance(myForm.city1, myForm.city2));
-    }
-  };
-
-  useEffect(() => {
-    if (calc!==null) {
-      let tmp = distance.substring(0, distance.length - 2).replace(/\s/g, "");
-      let d
-      if (tmp == '0') {
-        d = (((100 * 25 * myForm.weight) / 10) * myForm.size) / 10;
-      } else {
-        d = (((+tmp * 25 * myForm.weight) / 10) * myForm.size) / 10;
-      }
-
-      console.log(d);
-      setLoad(false)
-      setPrice(d);
-    }
-  }, [calc]);
-  useEffect(() => {
+    getFeedbacks().then((data) => setFeedbakcs(data));
     window.addEventListener("resize", handleResize, true);
     return () => {
       window.removeEventListener("resize", handleResize, true);
@@ -116,9 +39,39 @@ export const Main = observer(() => {
   };
   return (
     <>
+      <PopupAdmin isActive={popupFeedback} setIsActive={setPopupFeedback}>
+        {!!currentFeedback && (
+          <div className="feedback__card modal-card">
+            <div className="feedback__card-top">
+              <img src={avatar} className="feedback__card-avatar" />
+              <div className="feedback__card-info">
+                <div className="feedback__card-name">
+                  {currentFeedback.email}
+                </div>
+                {/* <div className="feedback__card-comment">8 отзывов</div> */}
+              </div>
+            </div>
+            <div className="feedback__card-bottom">
+              <div
+                className={
+                  "star-wrapper small-stars st" + currentFeedback.raiting
+                }
+              >
+                <p name="5" className="fas fa-star s1 "></p>
+                <p name="4" className="fas fa-star s2"></p>
+                <p name="3" className="fas fa-star s3 "></p>
+                <p name="2" className="fas fa-star s4"></p>
+                <p name="1" className="fas fa-star s5"></p>
+              </div>
+              <div className="feedback__card-text modal-text">
+                {currentFeedback.name}
+              </div>
+            </div>
+          </div>
+        )}
+      </PopupAdmin>
       <main className="main">
         <section className="top">
-          <div id="map" className="map"></div>
           <div className="top-sky"></div>
           <div className="bottom-sky"></div>
           <div className="container">
@@ -126,74 +79,7 @@ export const Main = observer(() => {
               <div className="top__calc">
                 <h3 className="title">РАСЧИТАТЬ СТОИМОСТЬ ЗАКАЗА</h3>
                 <div className="top__order-wrapper calc-wrapper">
-                  <div className="top__order-inner calc-inner">
-                    <div className="select">
-                      <select
-                        value={myForm.city1}
-                        name="city1"
-                        onChange={(e) => handleChange(e)}
-                        defaultValue={"DEFAULT"}
-                      >
-                        <option value="DEFAULT" hidden>
-                          Откуда
-                        </option>
-                        {cities &&
-                          cities.map((i, index) => {
-                            {
-                              return (
-                                <option value={i.name} key={index}>
-                                  {i.name}
-                                </option>
-                              );
-                            }
-                          })}
-                      </select>
-                    </div>
-                    <div className="select">
-                      <select
-                        value={myForm.city2}
-                        name="city2"
-                        onChange={(e) => handleChange(e)}
-                        defaultValue={"DEFAULT"}
-                      >
-                        <option value="DEFAULT" hidden>
-                          Куда
-                        </option>
-                        {cities &&
-                          cities.map((i, index) => {
-                            {
-                              return (
-                                <option value={i.name} key={index}>
-                                  {i.name}
-                                </option>
-                              );
-                            }
-                          })}
-                      </select>
-                    </div>
-                    <input
-                      value={myForm.weight}
-                      name="weight"
-                      onChange={(e) => handleChange(e)}
-                      className="input-calc"
-                      placeholder="Вес груза (кг)"
-                      type="text"
-                    />
-                    <input
-                      value={myForm.size}
-                      name="size"
-                      onChange={(e) => handleChange(e)}
-                      className="input-calc"
-                      placeholder="Длина груза (м)"
-                      type="text"
-                    />
-                    <div className="comment">
-                      от {price} ₽, скорейшее прибытие — через 4 дня
-                    </div>
-                    <button onClick={() => calculateOrder()} className="my-btn count-btn">
-                    {load?<Loader></Loader>:"Расчитать"}  
-                    </button>
-                  </div>
+                  <Calc isModal={false}></Calc>
                 </div>
               </div>
               <div className="top__order">
@@ -238,193 +124,51 @@ export const Main = observer(() => {
                 slidesPerView={countFeedback}
                 loop={true}
               >
-                <SwiperSlide>
-                  {" "}
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Роман Константинов
+                {feedbacks.length > 0 &&
+                  feedbacks.map((i,index) => (
+                    <SwiperSlide key={index}>
+                      {" "}
+                      <div className="feedback__card">
+                        <div className="feedback__card-top">
+                          <img src={avatar} className="feedback__card-avatar" />
+                          <div className="feedback__card-info">
+                            <div className="feedback__card-name">{i.email}</div>
+                            {/* <div className="feedback__card-comment">8 отзывов</div> */}
+                          </div>
                         </div>
-                        <div className="feedback__card-comment">8 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Мои,самые любимые эклеры маковый и сникерс. Покупаю
-                        и кушаю с удовольствием.
-                      </div>
-                      <div className="feedback__card-more">Читать дальше</div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Валерия Ковалёва
+                        <div className="feedback__card-bottom">
+                          <div
+                            className={
+                              "star-wrapper small-stars st" + i.raiting
+                            }
+                          >
+                            <p name="5" className="fas fa-star s1 "></p>
+                            <p name="4" className="fas fa-star s2"></p>
+                            <p name="3" className="fas fa-star s3 "></p>
+                            <p name="2" className="fas fa-star s4"></p>
+                            <p name="1" className="fas fa-star s5"></p>
+                          </div>
+                          <div
+                            className={
+                              i.name.length > 120
+                                ? "feedback__card-text dotes"
+                                : "feedback__card-text"
+                            }
+                          >
+                            {i.name}
+                          </div>
+                          {i.name.length > 120 && (
+                            <button
+                              onClick={() => openFeedback(i)}
+                              className="feedback__card-more"
+                            >
+                              Читать дальше
+                            </button>
+                          )}
                         </div>
-                        <div className="feedback__card-comment">12 отзывов</div>
                       </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="gray" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Отличная компания. Груз пришел быстро.
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Роман Задонский
-                        </div>
-                        <div className="feedback__card-comment">12 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Отличия транспортная компания приветливый и отзывчивый
-                        персонал. Все более доступно и понятно...
-                      </div>
-                      <div className="feedback__card-more">Читать дальше</div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Аркадий Куйбыв
-                        </div>
-                        <div className="feedback__card-comment">10 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Отличная компания. На днях забирал груз. Все очень
-                        быстро и без проблем.
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Аркадий Куйбыв
-                        </div>
-                        <div className="feedback__card-comment">10 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Все прошло успешно!
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Роман Задонский
-                        </div>
-                        <div className="feedback__card-comment">12 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Отличия транспортная компания приветливый и отзывчивый
-                        персонал. Все более доступно и понятно...
-                      </div>
-                      <div className="feedback__card-more">Читать дальше</div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  {" "}
-                  <div className="feedback__card">
-                    <div className="feedback__card-top">
-                      <img src={avatar} className="feedback__card-avatar" />
-                      <div className="feedback__card-info">
-                        <div className="feedback__card-name">
-                          Роман Константинов
-                        </div>
-                        <div className="feedback__card-comment">8 отзывов</div>
-                      </div>
-                    </div>
-                    <div className="feedback__card-bottom">
-                      <div className="feedback__card-stars">
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                        <div id="yellow" className="feedback__card-star"></div>
-                      </div>
-                      <div className="feedback__card-text">
-                        Очень достойная компания. Срок доставки был гораздо
-                        быстрей заявленного...
-                      </div>
-                      <div className="feedback__card-more">Читать дальше</div>
-                    </div>
-                  </div>
-                </SwiperSlide>
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
           </div>
@@ -444,7 +188,7 @@ export const Main = observer(() => {
 
               <ul className="about__cards">
                 <li className="about__card">
-                  <div className="subtitle">Выгодные условия</div>
+                  <div className="subtitle about-card">Выгодные условия</div>
                   <div className="about__text">
                     Умеем входить в положение заказчика и готовы пойти на
                     уступки в цене и условиях оплаты. Всегда предлагаем
@@ -452,7 +196,7 @@ export const Main = observer(() => {
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle">Выгодные условия</div>
+                  <div className="subtitle about-card">Выгодные условия</div>
                   <div className="about__text">
                     Умеем входить в положение заказчика и готовы пойти на
                     уступки в цене и условиях оплаты. Всегда предлагаем
@@ -460,7 +204,7 @@ export const Main = observer(() => {
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle">Выгодные условия</div>
+                  <div className="subtitle about-card">Выгодные условия</div>
                   <div className="about__text">
                     Умеем входить в положение заказчика и готовы пойти на
                     уступки в цене и условиях оплаты. Всегда предлагаем
@@ -468,7 +212,7 @@ export const Main = observer(() => {
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle">Выгодные условия</div>
+                  <div className="subtitle about-card">Выгодные условия</div>
                   <div className="about__text">
                     Умеем входить в положение заказчика и готовы пойти на
                     уступки в цене и условиях оплаты. Всегда предлагаем

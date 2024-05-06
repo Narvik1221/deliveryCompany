@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import logo from "../images/logo.jpeg";
-import { MAIN_ROUTE, AUTH_ROUTE, CABINET_ROUTE, ADMIN_ROUTE } from "../utils/consts";
+import {
+  MAIN_ROUTE,
+  LOGIN_ROUTE,
+  CABINET_ROUTE,
+  ADMIN_ROUTE,
+} from "../utils/consts";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
@@ -10,7 +15,7 @@ export const Header = observer(() => {
   const btn = useRef();
   const location = useLocation();
   const [wrp, setWrp] = useState(false);
-  const [path,setPath]= useState(AUTH_ROUTE);
+  const [path, setPath] = useState(LOGIN_ROUTE);
   const click = (e) => {
     setWrp(!wrp);
   };
@@ -18,28 +23,24 @@ export const Header = observer(() => {
     if (document.body.clientWidth > 748) setWrp(false);
   };
   useEffect(() => {
-    console.log(user.isAuth)
-      if(user.isAuth){
-    
-        let myUser=localStorage.getItem("user")
-        if(!!myUser){
-          myUser=JSON.parse(myUser)
-          if(myUser.token.role=="ADMIN"){
-            setPath(ADMIN_ROUTE)
-          }
-          else{
-            setPath(CABINET_ROUTE)
-          }
-        
+    user.setPath(LOGIN_ROUTE);
+    console.log(user.isAuth);
+    if (user.isAuth) {
+      let myUser = localStorage.getItem("user");
+      if (!!myUser) {
+        myUser = JSON.parse(myUser);
+        if (myUser.token.role == "ADMIN") {
+          setPath(ADMIN_ROUTE);
+        } else {
+          setPath(CABINET_ROUTE);
+          user.setPath(CABINET_ROUTE);
         }
-
       }
-        else{
-          setPath(AUTH_ROUTE)
-        }
+    } else {
+      setPath(LOGIN_ROUTE);
+    }
   }, [user.isAuth]);
   useEffect(() => {
-
     window.addEventListener("resize", handleResize, true);
     return () => {
       window.removeEventListener("resize", handleResize, true);
@@ -84,8 +85,8 @@ export const Header = observer(() => {
                 </>
               )}
 
-              <li className="wrp__navbar-item">
-                <Link  to={path} className="header__link">
+              <li onClick={() => setWrp(false)} className="wrp__navbar-item">
+                <Link to={path} className="header__link">
                   Личный кабинет
                 </Link>
               </li>

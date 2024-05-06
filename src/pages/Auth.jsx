@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Container, form } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { Button } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
@@ -28,14 +28,14 @@ const Auth = observer(() => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-
       event.stopPropagation();
     }
 
     setValidated(true);
   };
-  const click = async () => {
+  const click = async (e) => {
     try {
+      e.preventDefault()
       let data;
       if (isLogin) {
         data = await login(email, password);
@@ -46,13 +46,11 @@ const Auth = observer(() => {
       localStorage.setItem("user", JSON.stringify(data));
       user.setUser(user);
       user.setIsAuth(true);
-      if(data.token.role=="ADMIN"){
-        history(ADMIN_ROUTE);
+      if (data.token.role == "ADMIN") {
+        history(ADMIN_ROUTE, { replace: true });
+      } else {
+        history(CABINET_ROUTE, { replace: true });
       }
-      else{
-        history(CABINET_ROUTE);
-      }
- 
     } catch (e) {
       alert(e.response.data.message);
     }
@@ -66,39 +64,27 @@ const Auth = observer(() => {
             <h2 className="m-auto">
               {isLogin ? "Авторизация" : "Регистрация"}
             </h2>
-            <Form
-              noValidate
-              validated={validated}
-              onSubmit={handleSubmit}
-              className="d-flex flex-column gap"
-            >
-              {/* {!isLogin && (
-                  <>
-                    <Form.Control
-                      required
-                      className="mt-3"
-                      placeholder="Введите ваше имя"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <Form.Control
-                      required
-                      className="mt-3"
-                      placeholder="Введите вашу фамилию"
-                      value={surname}
-                      onChange={(e) => setSurname(e.target.value)}
-                    />
-                  </>
-                )} */}
+            <form onSubmit={click} className="d-flex flex-column gap">
+              {isLogin ? (
+                <input
+                  required
+                  className="mt-3"
+                  placeholder="Введите ваш email..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              ) : (
+                <input
+                  type="email"
+                  required
+                  className="mt-3"
+                  placeholder="Введите ваш email..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              )}
 
-              <Form.Control
-                required
-                className="mt-3"
-                placeholder="Введите ваш email..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Form.Control
+              <input
                 required
                 className="mt-3"
                 placeholder="Введите ваш пароль..."
@@ -119,11 +105,11 @@ const Auth = observer(() => {
                   </div>
                 )}
 
-                <button onClick={click} className="my-btn auth-btn ">
+                <button type="submit" className="my-btn auth-btn ">
                   {isLogin ? "Войти" : "Регистрация"}
                 </button>
               </Row>
-            </Form>
+            </form>
           </div>
         </div>
       </div>

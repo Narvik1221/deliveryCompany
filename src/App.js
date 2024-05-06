@@ -13,6 +13,7 @@ const App = observer(() => {
 
   useEffect(() => {
       check().then(data => {
+        console.log(data)
           user.setUser(true)
           user.setIsAuth(true)
       }).finally(() => setLoading(false))

@@ -2,20 +2,45 @@ import { makeAutoObservable } from "mobx";
 
 export default class UserStore {
   constructor() {
-    this._isAuth = false;
+    this._isAuth = !!localStorage.getItem("user");
     this._role = false;
     this._userId = false;
     this._name = false;
     this._surname = false;
+    this._path = false;
+    this._path =false;
     this._searchValue = false;
+    this._popupAdmin = false;
     this._theme = localStorage.getItem('theme')==='true';
     makeAutoObservable(this);
   }
+
+  setPopupAdmin(v) {
+    this._popupAdmin = v;
+  }
+  get popupAdmin() {
+    return this._popupAdmin;
+  }
+
   setTheme(v) {
     this._theme = v;
   }
   get theme() {
     return this._theme;
+  }
+
+  setOrder(v) {
+    this._theme = v;
+  }
+  get order() {
+    return this._theme;
+  }
+
+  setPath(v) {
+    this._path = v;
+  }
+  get path() {
+    return this._path;
   }
 
   setSearchValue(v) {
