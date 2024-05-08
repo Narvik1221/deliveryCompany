@@ -125,7 +125,7 @@ export const Main = observer(() => {
                 loop={true}
               >
                 {feedbacks.length > 0 &&
-                  feedbacks.map((i,index) => (
+                  feedbacks.map((i, index) => (
                     <SwiperSlide key={index}>
                       {" "}
                       <div className="feedback__card">
@@ -196,27 +196,26 @@ export const Main = observer(() => {
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle about-card">Выгодные условия</div>
+                  <div className="subtitle about-card">Отзывчивый персонал</div>
                   <div className="about__text">
-                    Умеем входить в положение заказчика и готовы пойти на
-                    уступки в цене и условиях оплаты. Всегда предлагаем
-                    множество вариантов для выбора оптимального.
+                    Наш персонал в любую минуту готов ответить на вопросы
+                    заказчика
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle about-card">Выгодные условия</div>
+                  <div className="subtitle about-card">Бонусы</div>
                   <div className="about__text">
-                    Умеем входить в положение заказчика и готовы пойти на
-                    уступки в цене и условиях оплаты. Всегда предлагаем
-                    множество вариантов для выбора оптимального.
+                    Постоянным партнерам зеленый свет и большие преференции,
+                    включая бонусную программу и целый ряд дополнительных
+                    преимуществ.
                   </div>
                 </li>
                 <li className="about__card">
-                  <div className="subtitle about-card">Выгодные условия</div>
+                  <div className="subtitle about-card">Опытные водители</div>
                   <div className="about__text">
-                    Умеем входить в положение заказчика и готовы пойти на
-                    уступки в цене и условиях оплаты. Всегда предлагаем
-                    множество вариантов для выбора оптимального.
+                    Работают только профессиональные водители с опытом более 10
+                    лет. Смотрите фото и видео отзывы о компании и наших
+                    сотрудниках.
                   </div>
                 </li>
               </ul>

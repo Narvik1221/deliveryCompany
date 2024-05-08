@@ -170,9 +170,9 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
       }
       let d;
       if (tmp == "0") {
-        d = 500 + (((200 * 15 * myForm.weight) / 15) * myForm.size) / 15;
+        d = 500 + (((200 * 10 * myForm.weight) / 25) * myForm.size) / 20;
       } else {
-        d = 500 + (((+tmp * 15 * myForm.weight) / 15) * myForm.size) / 15;
+        d = 500 + (((+tmp * 10 * myForm.weight) / 25) * myForm.size) / 20;
       }
 
       console.log(d);
@@ -254,7 +254,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
         </div>
         <input
           min={0}
-          max={150}
+          max={350}
           required
           value={myForm.weight}
           name="weight"
