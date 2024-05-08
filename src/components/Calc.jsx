@@ -1,20 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { observer } from "mobx-react-lite";
-import search from "../images/search.svg";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import Footer from "../components/Footer";
-import Card from "../components/Card";
-import avatar from "../images/avatar.svg";
 import Loader from "../components/Loader/Loader";
 import { getCities, createOrder, getOrders } from "../http/orderAPI";
-import { size } from "@cloudinary/url-gen/qualifiers/textFit";
 import { Context } from "../index";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toJS } from "mobx";
 export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
   const { user } = useContext(Context);
-  const options = [];
   const [countFeedback, setCountFeedback] = useState(
     document.body.clientWidth / 440
   );
@@ -64,7 +56,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
       price: price,
       date1: data1,
       date2: data2,
-      email:myUser.token.email
+      email: myUser.token.email,
     }).then((data) => {
       setOrders((current) => [...current, data]);
       setPopupAdmin(false);

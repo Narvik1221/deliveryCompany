@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import search from "../images/search.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { PopupAdmin } from "../components/PopupAdmin";
@@ -8,11 +7,8 @@ import Footer from "../components/Footer";
 import Calc from "../components/Calc";
 import Card from "../components/Card";
 import avatar from "../images/avatar.svg";
-import Loader from "../components/Loader/Loader";
-import { getCities, getFeedbacks } from "../http/orderAPI";
-import { size } from "@cloudinary/url-gen/qualifiers/textFit";
+import { getFeedbacks } from "../http/orderAPI";
 import { Context } from "../index";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 export const Main = observer(() => {
   const { user } = useContext(Context);
   const [feedbacks, setFeedbakcs] = useState([]);
