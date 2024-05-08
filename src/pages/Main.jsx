@@ -198,8 +198,9 @@ export const Main = observer(() => {
                 <li className="about__card">
                   <div className="subtitle about-card">Отзывчивый персонал</div>
                   <div className="about__text">
-                    Наш персонал в любую минуту готов ответить на вопросы
-                    заказчика
+                    Наша команда обеспечивает высокое качество услуг,
+                    индивидуальный подход к каждому клиенту и в любую минуту
+                    готова ответить на вопросы заказчика
                   </div>
                 </li>
                 <li className="about__card">
