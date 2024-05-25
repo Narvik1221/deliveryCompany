@@ -20,7 +20,7 @@ const App = observer(() => {
   }, [])
   return (
     <BrowserRouter>
-      <div className="wrapper">
+      <div id="top" className="wrapper">
         <Header />
         <AppRouter />
  

@@ -27,9 +27,10 @@ export const Header = observer(() => {
     console.log(user.isAuth);
     if (user.isAuth) {
       let myUser = localStorage.getItem("user");
+      console.log(myUser);
       if (!!myUser) {
         myUser = JSON.parse(myUser);
-        if (myUser.token.role == "ADMIN") {
+        if (myUser?.token?.role == "ADMIN") {
           setPath(ADMIN_ROUTE);
         } else {
           setPath(CABINET_ROUTE);
@@ -51,9 +52,16 @@ export const Header = observer(() => {
       <div className={wrp ? "wrp active" : "wrp"}>
         <div className="container wrp-container">
           <div className="wrp__inner">
-            <Link to={MAIN_ROUTE} className="header__logo--link">
-              <img src={logo} className="header__logo" />
-            </Link>
+            {location.pathname == MAIN_ROUTE ? (
+              <a href="#top" className="header__logo--link">
+                <img src={logo} className="header__logo" />
+              </a>
+            ) : (
+              <Link to={MAIN_ROUTE} className="header__logo--link">
+                <img src={logo} className="header__logo" />
+              </Link>
+            )}
+
             <ul className="wrp__navbar">
               {location.pathname == MAIN_ROUTE && (
                 <>
@@ -94,13 +102,19 @@ export const Header = observer(() => {
           </div>
         </div>
       </div>
-      <header className={wrp ? "header active" : "header"}>
+      <header  className={wrp ? "header active" : "header"}>
         <div className="container">
           <div className={wrp ? "header__inner active" : "header__inner"}>
             <div className="header__left">
+            {location.pathname == MAIN_ROUTE ? (
+              <a href="#top" className="header__logo--link">
+                <img src={logo} className="header__logo" />
+              </a>
+            ) : (
               <Link to={MAIN_ROUTE} className="header__logo--link">
                 <img src={logo} className="header__logo" />
               </Link>
+            )}
 
               <div className="header__phone header-big">8 800 555-35-35</div>
 

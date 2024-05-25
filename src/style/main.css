@@ -609,6 +609,7 @@ select::-ms-expand {
   color: var(--ye);
 }
 .modal-card {
+  height: auto !important ;
   margin-left: 10px;
 }
 

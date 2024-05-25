@@ -35,6 +35,7 @@ export const Main = observer(() => {
   };
   return (
     <>
+
       <PopupAdmin isActive={popupFeedback} setIsActive={setPopupFeedback}>
         {!!currentFeedback && (
           <div className="feedback__card modal-card">
@@ -67,7 +68,7 @@ export const Main = observer(() => {
         )}
       </PopupAdmin>
       <main className="main">
-        <section className="top">
+        <section  className="top">
           <div className="top-sky"></div>
           <div className="bottom-sky"></div>
           <div className="container">
