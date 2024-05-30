@@ -246,7 +246,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
         </div>
         <input
           min={0}
-          max={350}
+          max={20000}
           required
           value={myForm.weight}
           name="weight"
@@ -257,7 +257,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
         />
         <input
           min={0}
-          max={20}
+          max={90}
           required
           value={myForm.size}
           name="size"

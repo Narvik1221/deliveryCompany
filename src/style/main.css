@@ -1232,3 +1232,21 @@ th {
       url("../images/back.jpeg");
   }
 }
+
+
+
+@media (max-width: 540px) {
+  .close-card{
+    right: 46px;
+  }
+  .modal-card{
+    overflow: auto;
+    max-width: 420px;
+    height: auto !important;
+    margin-left: -20px;
+    width: 100%;
+  }
+  .modal-text{
+    font-size: 16px;
+  }
+}

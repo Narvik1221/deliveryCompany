@@ -15,11 +15,11 @@ export const Footer = () => {
             <img src={logo} className="header__logo" />
           </Link>
         <div className="footer__right">
-          <a href="#" className="header__link">
+          <a target="blank" href="whatsapp://send?phone=+73812000000" className="header__link">
             <img src={what} alt="" />
             +7 (3812) 000-000
           </a>
-          <a href="#" className="header__link">
+          <a target="blank" href="https://mail.ru" className="header__link">
             <img src={mail} alt="" /> gruz_service@mail.ru
           </a></div>
         </div>
