@@ -19,7 +19,7 @@ export const Footer = () => {
             <img src={what} alt="" />
             +7 (3812) 000-000
           </a>
-          <a target="blank" href="https://mail.ru" className="header__link">
+          <a target="blank" href="mailto:gruz_service@mail.ru" className="header__link">
             <img src={mail} alt="" /> gruz_service@mail.ru
           </a></div>
         </div>
