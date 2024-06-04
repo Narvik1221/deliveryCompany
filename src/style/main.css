@@ -1232,8 +1232,12 @@ th {
       url("../images/back.jpeg");
   }
 }
-
-
+.btn-footer{
+  cursor: pointer;
+}
+.bmc-btn-container{
+  display: none !important;
+}
 
 @media (max-width: 540px) {
   .close-card{
