@@ -178,7 +178,10 @@ export const Main = observer(() => {
               <h3 className="title">
               ПРЕИМУЩЕСТВА КОМПАНИИ <span className="green">ГРУЗ СЕРВИС</span>
               </h3>
-
+              <div className="subtitle">
+                Ежедневно оказываем полный комплекс разнообразных услуг для
+                скорости, безопасности и удобства.
+              </div>
 
               <ul className="about__cards">
                 <li className="about__card">
