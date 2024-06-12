@@ -176,12 +176,9 @@ export const Main = observer(() => {
           <div className="container">
             <div className="about__inner">
               <h3 className="title">
-                УСЛУГИ КОМПАНИИ <span className="green">ГРУЗ СЕРВИС</span>
+              ПРЕИМУЩЕСТВА КОМПАНИИ <span className="green">ГРУЗ СЕРВИС</span>
               </h3>
-              <div className="subtitle">
-                Ежедневно оказываем полный комплекс разнообразных услуг для
-                скорости, безопасности и удобства.
-              </div>
+
 
               <ul className="about__cards">
                 <li className="about__card">
