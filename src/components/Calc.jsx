@@ -244,7 +244,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
               })}
           </select>
         </div>
-        <h1></h1>
+        <h1>n</h1>
         new
         <input
           min={0}
