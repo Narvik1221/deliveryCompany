@@ -193,7 +193,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
   return (
     <>
       <div id="map" className="map"></div>
-    m
+    
       <form
         onSubmit={(e) => calculateOrder(e)}
         className="top__order-inner calc-inner"
@@ -244,6 +244,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
               })}
           </select>
         </div>
+        <h1></h1>
         <input
           min={0}
           max={20000}
@@ -256,6 +257,17 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
           type="number"
         />
         <input
+          min={0}
+          max={90}
+          required
+          value={myForm.size}
+          name="size"
+          onChange={(e) => handleChange(e)}
+          className="input-calc"
+          placeholder="Объем груза (м&#179;)"
+          type="number"
+        />
+         <input
           min={0}
           max={90}
           required
@@ -290,7 +302,7 @@ export const Calc = ({ isModal, setOrders, setPopupAdmin }) => {
                   onClick={(e) => setMyOrder(e)}
                   className="my-btn"
                 >
-                  Перейти к заказу
+                  Перейти к заказу Перейти к заказу
                 </button>
               )}
         </div>
