@@ -13,7 +13,7 @@ export const Card = () => {
             top: "0px",
           }}
         >
-          Благовещенск
+          Благовещенск3
         </a>
         <a
           href="https://yandex.ru/maps/77/blagoveshchensk/house/novotroitskoye_shosse_23b/ZUsBaAJjS0wCXEJvY2JycXpiYAo=/?ll=127.533010%2C50.306389&utm_medium=mapframe&utm_source=maps&z=19"
