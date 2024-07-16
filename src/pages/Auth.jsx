@@ -92,7 +92,7 @@ const Auth = observer(() => {
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
               />
-
+123
               <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
                 {isLogin ? (
                   <div className="auth-message">
